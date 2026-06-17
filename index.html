@@ -410,7 +410,6 @@ function makeMap(litKeys = []) {
       const [r,c] = POS[p.key];
       const isLit = litKeys.includes(p.key);
       return `<div class="pm-cell${isLit?' lit':''}" style="grid-row:${r};grid-column:${c}">
-        <div class="pm-branch">${p.branch}</div>
         <div class="pm-palace">${p.palace}</div>
         <div class="pm-stars">${p.stars.replace('\n','<br>')}</div>
       </div>`;
@@ -431,7 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <section class="cover">
   <div class="cover-eyebrow">命宮研究所 · 命盤報告</div>
 
-  <div class="illus illus-lg"><img src="po.png" alt="角色主卡插畫" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
+  <div class="illus illus-lg"><img src="po2.png" alt="角色主卡插畫" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
 
   <h1 class="cover-title serif">三方衝突<br><span style="font-size:0.6em;font-weight:400;letter-spacing:0.05em;">突破・維持・安定</span></h1>
   <p class="cover-stars">武曲×破軍・遷移天相・福德天府</p>
@@ -748,22 +747,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     <div data-lit="父,兄,子"></div>
 
-    <div class="mini-cards">
-      <div class="mini-card">
-        <div class="mc-palace">父母宮</div>
-        <div class="mc-star">太陽</div>
-        <div class="mc-desc">與長輩緣分較深，得長輩支持，父親形象在你人生影響較大</div>
-      </div>
-      <div class="mini-card">
-        <div class="mc-palace">兄弟宮</div>
-        <div class="mc-star">天同</div>
-        <div class="mc-desc">與手足或平輩相處輕鬆愉快，不帶壓力，喜歡和平的關係</div>
-      </div>
-      <div class="mini-card">
-        <div class="mc-palace">子女宮</div>
-        <div class="mc-star">空宮</div>
-        <div class="mc-desc">對下一代這件事比較自由，不執著，或以創作作為傳承</div>
-      </div>
+    <p class="body-text">太陽在父母宮，與長輩緣分較深，得長輩支持。父親形象在你人生影響較大，有被看見與被認可的渴望，這份需求有時也延伸到你對外在世界的態度上。</p>
+    <p class="body-text">天同在兄弟宮，與手足或平輩相處輕鬆愉快，不帶壓力，喜歡和平的關係。子女宮空宮，對下一代這件事比較自由，不執著，或以創作作為傳承的方式。</p>
+    <div class="callout">
+      <p>原生家庭給了你被看見的渴望，平輩關係給了你喘息的空間。這兩者一起，構成你對「家」的感受底色。</p>
     </div>
   </div>
 </section>
@@ -803,17 +790,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     <div data-lit="財,田"></div>
 
-    <div class="mini-cards">
-      <div class="mini-card">
-        <div class="mc-palace">財帛宮</div>
-        <div class="mc-star">廉貞×七殺</div>
-        <div class="mc-desc">靠自己的能力和意志力賺錢，不依賴他人。財來財去的節奏，關鍵是找到真正有熱情的方向</div>
-      </div>
-      <div class="mini-card">
-        <div class="mc-palace">田宅宮</div>
-        <div class="mc-star">太陰</div>
-        <div class="mc-desc">家是你補充能量的地方，需要有質感、柔軟的私人空間。資產累積方式偏向安靜積累</div>
-      </div>
+    <p class="body-text">財帛宮坐廉貞七殺，你靠自己的能力和意志力賺錢，不依賴他人。財來財去節奏明顯，有時候大起大落——關鍵不是節流，而是找到真正有熱情的方向，方向對了財才聚得住。</p>
+    <p class="body-text">田宅宮太陰，家是你補充能量的地方。你需要有質感、柔軟的私人空間，資產的累積方式偏向安靜積累，而不是快進快出。</p>
+    <div class="callout">
+      <p>財帛的廉殺讓你衝，田宅的太陰讓你沉澱。<strong>賺的方式是主動出擊，守的方式是安靜積累。</strong>兩件事同時做，才是你物質線的節奏。</p>
     </div>
   </div>
 </section>
