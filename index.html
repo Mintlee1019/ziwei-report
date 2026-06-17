@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>命盤報告｜三方衝突：突破、維持與安定</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #FAFAF8;
+  --ink: #1A1A1A;
+  --mid: #555;
+  --light: #999;
+  --rule: #E0E0DC;
+  --block: #F2F2EF;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 300;
+  line-height: 1.9;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.serif { font-family: 'Noto Serif TC', serif; }
+
+/* ── 插畫佔位框 ── */
+.illus {
+  width: 100%;
+  background: var(--block);
+  border: 1.5px dashed #CCC;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #BBB;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  margin: 32px 0;
+}
+.illus-lg { height: 320px; }
+.illus-md { height: 200px; }
+.illus-sm { height: 120px; }
+
+/* ── 命盤小地圖 ── */
+.palace-map {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, auto);
+  gap: 2px;
+  background: #1A1A1A;
+  border: 1px solid #1A1A1A;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 0 36px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.pm-cell {
+  background: var(--block);
+  padding: 8px 6px;
+  text-align: center;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  transition: background 0.15s;
+}
+
+.pm-center {
+  grid-row: 2 / 4;
+  grid-column: 2 / 4;
+  background: var(--bg);
+  border: none;
+}
+
+.pm-cell.lit {
+  background: var(--ink);
+}
+
+.pm-branch {
+  font-size: 8px;
+  color: var(--light);
+  letter-spacing: 0.05em;
+}
+.pm-cell.lit .pm-branch { color: rgba(255,255,255,0.35); }
+
+.pm-palace {
+  font-size: 9px;
+  color: var(--mid);
+  letter-spacing: 0.05em;
+}
+.pm-cell.lit .pm-palace { color: rgba(255,255,255,0.6); }
+
+.pm-stars {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-top: 2px;
+}
+.pm-cell.lit .pm-stars { color: white; }
+
+/* ── 封面 ── */
+.cover {
+  padding: 80px 48px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.cover-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--light);
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.cover-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(36px, 8vw, 56px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.cover-stars {
+  font-size: 14px;
+  color: var(--mid);
+  margin-bottom: 64px;
+}
+
+.cover-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+
+.summary-cell {
+  background: var(--bg);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summary-cell.dark {
+  background: var(--ink);
+  color: white;
+}
+
+.sc-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--light);
+  text-transform: uppercase;
+}
+.summary-cell.dark .sc-label { color: rgba(255,255,255,0.4); }
+
+.sc-value {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.sc-sub {
+  font-size: 10px;
+  color: var(--light);
+}
+.summary-cell.dark .sc-sub { color: rgba(255,255,255,0.35); }
+
+/* ── 章節 ── */
+.part {
+  padding: 80px 48px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.part-header {
+  margin-bottom: 64px;
+}
+
+.part-num {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--light);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.part-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(22px, 4vw, 32px);
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+/* ── 小節 ── */
+.section {
+  padding: 48px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.section:last-child { border-bottom: none; }
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.section-palace {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--light);
+  flex-shrink: 0;
+}
+
+.section-stars {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.section-concept {
+  font-size: 11px;
+  color: var(--light);
+  margin-left: auto;
+  letter-spacing: 0.1em;
+}
+
+.body-text {
+  font-size: 15px;
+  line-height: 2;
+  color: var(--mid);
+  margin-bottom: 20px;
+}
+.body-text:last-child { margin-bottom: 0; }
+
+.callout {
+  background: var(--block);
+  padding: 20px 24px;
+  margin: 24px 0;
+  border-left: 2px solid var(--ink);
+}
+.callout p {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--ink);
+}
+
+.quote {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 17px;
+  font-weight: 300;
+  text-align: center;
+  padding: 32px 0;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+/* ── 迴圈 ── */
+.loop {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 24px 0;
+}
+.loop-node {
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--mid);
+  white-space: nowrap;
+}
+.loop-arrow { font-size: 12px; color: var(--light); }
+
+/* ── 支線群組 ── */
+.line-header {
+  padding: 32px 48px 24px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.line-num {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--light);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.line-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+/* ── 星系比例 ── */
+.ratio-wrap { margin: 20px 0 8px; }
+.ratio-bar {
+  height: 6px;
+  background: var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  margin-bottom: 8px;
+}
+.ratio-a { background: var(--ink); height: 100%; }
+.ratio-b { background: #999; height: 100%; }
+.ratio-labels { display: flex; gap: 20px; font-size: 11px; color: var(--light); }
+.ratio-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+
+/* ── 12 宮全覽 ── */
+.palace-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 0 0 0;
+}
+
+/* ── 複數宮位小卡 ── */
+.mini-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 24px 0;
+}
+.mini-card {
+  background: var(--bg);
+  padding: 20px;
+}
+.mc-palace { font-size: 9px; letter-spacing: 0.2em; color: var(--light); margin-bottom: 4px; }
+.mc-star { font-family: 'Noto Serif TC', serif; font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.mc-desc { font-size: 12px; color: var(--mid); line-height: 1.8; }
+
+/* ── RWD ── */
+@media (max-width: 600px) {
+  .cover { padding: 60px 24px; }
+  .cover-summary { grid-template-columns: repeat(2, 1fr); }
+  .part { padding: 60px 24px; }
+  .line-header { padding: 28px 24px 20px; }
+  .palace-map { max-width: 100%; }
+  .pm-cell { min-height: 48px; padding: 6px 4px; }
+  .pm-stars { font-size: 9px; }
+}
+</style>
+</head>
+<body>
+
+<script>
+// 命盤資料（固定）
+const CHART = [
+  { branch:'巳', palace:'命宮',  stars:'武曲\n破軍', key:'命' },
+  { branch:'午', palace:'父母',  stars:'太陽',       key:'父' },
+  { branch:'未', palace:'福德',  stars:'天府',       key:'福' },
+  { branch:'申', palace:'田宅',  stars:'太陰',       key:'田' },
+  { branch:'辰', palace:'兄弟',  stars:'天同',       key:'兄' },
+  { branch:'酉', palace:'官祿',  stars:'紫微\n貪狼', key:'官' },
+  { branch:'卯', palace:'夫妻',  stars:'空宮',       key:'夫' },
+  { branch:'戌', palace:'交友',  stars:'巨門',       key:'友' },
+  { branch:'寅', palace:'子女',  stars:'空宮',       key:'子' },
+  { branch:'丑', palace:'財帛',  stars:'廉貞\n七殺', key:'財' },
+  { branch:'子', palace:'疾厄',  stars:'天梁',       key:'疾' },
+  { branch:'亥', palace:'遷移',  stars:'天相',       key:'遷' },
+];
+
+// 宮位在 grid 的位置 [row, col]
+const POS = {
+  '命':[1,1], '父':[1,2], '福':[1,3], '田':[1,4],
+  '兄':[2,1],                          '官':[2,4],
+  '夫':[3,1],                          '友':[3,4],
+  '子':[4,1], '財':[4,2], '疾':[4,3], '遷':[4,4],
+};
+
+function makeMap(litKeys = []) {
+  const cells = new Array(4).fill(null).map(() => new Array(4).fill(null));
+
+  CHART.forEach(p => {
+    const [r, c] = POS[p.key];
+    const isLit = litKeys.includes(p.key);
+    cells[r-1][c-1] = `
+      <div class="pm-cell${isLit ? ' lit' : ''}" style="grid-row:${r};grid-column:${c}">
+        <div class="pm-branch">${p.branch}</div>
+        <div class="pm-palace">${p.palace}</div>
+        <div class="pm-stars">${p.stars.replace('\n','<br>')}</div>
+      </div>`;
+  });
+
+  return `<div class="palace-map">
+    ${CHART.map(p => {
+      const [r,c] = POS[p.key];
+      const isLit = litKeys.includes(p.key);
+      return `<div class="pm-cell${isLit?' lit':''}" style="grid-row:${r};grid-column:${c}">
+        <div class="pm-branch">${p.branch}</div>
+        <div class="pm-palace">${p.palace}</div>
+        <div class="pm-stars">${p.stars.replace('\n','<br>')}</div>
+      </div>`;
+    }).join('')}
+    <div class="pm-center"></div>
+  </div>`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-lit]').forEach(el => {
+    const keys = el.dataset.lit.split(',');
+    el.innerHTML = makeMap(keys);
+  });
+});
+</script>
+
+<!-- ══ 封面 ══ -->
+<section class="cover">
+  <div class="cover-eyebrow">命宮研究所 · 命盤報告</div>
+
+  <div class="illus illus-lg">[ 角色主卡插畫 ]</div>
+
+  <h1 class="cover-title serif">三方衝突<br><span style="font-size:0.6em;font-weight:400;letter-spacing:0.05em;">突破・維持・安定</span></h1>
+  <p class="cover-stars">武曲×破軍・遷移天相・福德天府</p>
+
+  <div class="cover-summary">
+    <div class="summary-cell">
+      <div class="sc-label">命宮主星</div>
+      <div class="sc-value">武曲×破軍</div>
+      <div class="sc-sub">掌控與突破</div>
+    </div>
+    <div class="summary-cell">
+      <div class="sc-label">資源牌</div>
+      <div class="sc-value">火馬牌</div>
+      <div class="sc-sub">命宮在巳</div>
+    </div>
+    <div class="summary-cell">
+      <div class="sc-label">星系</div>
+      <div class="sc-value">開拓 67%</div>
+      <div class="sc-sub">領導 33%</div>
+    </div>
+    <div class="summary-cell">
+      <div class="sc-label">身宮課題</div>
+      <div class="sc-value">親密關係</div>
+      <div class="sc-sub">夫妻宮</div>
+    </div>
+    <div class="summary-cell">
+      <div class="sc-label">輔星</div>
+      <div class="sc-value">文昌</div>
+      <div class="sc-sub">廟・化科入命</div>
+    </div>
+    <div class="summary-cell dark">
+      <div class="sc-label">腳本</div>
+      <div class="sc-value">三方衝突<br>突破・維持・安定</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12 宮全覽 ══ -->
+<section class="part" style="padding-top:64px;padding-bottom:0;">
+  <div class="part-header" style="margin-bottom:36px;">
+    <div class="part-num">命盤全覽</div>
+    <h2 class="part-title" style="font-size:22px;">12 宮一覽</h2>
+  </div>
+  <div class="palace-overview">
+
+    <div class="mini-card">
+      <div class="mc-palace">命宮・你是誰</div>
+      <div class="mc-star">武曲×破軍</div>
+      <div class="mc-desc">掌控力與突破欲同體。建了想改，穩了想衝。輔：文昌化科（廟）</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">父母宮・原生家庭</div>
+      <div class="mc-star">太陽</div>
+      <div class="mc-desc">與長輩緣深，得父蔭。父親形象對你影響大，有被看見與被認可的渴望</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">福德宮・精神燃料</div>
+      <div class="mc-star">天府</div>
+      <div class="mc-desc">靈魂渴望豐盛與安定。「夠了就好」是你最深的放鬆狀態</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">田宅宮・空間與資產</div>
+      <div class="mc-star">太陰</div>
+      <div class="mc-desc">家是補充能量的地方。需要柔軟有質感的私人空間，資產靠安靜積累</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">官祿宮・事業</div>
+      <div class="mc-star">紫微×貪狼</div>
+      <div class="mc-desc">天生有影響力與號召力。適合主導方向、需要創意與人際連結的工作</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">交友宮・人際</div>
+      <div class="mc-star">巨門</div>
+      <div class="mc-desc">朋友不多但真。喜歡深度對話，耐不住只是閒聊的關係。口才犀利</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">遷移宮・社會面具</div>
+      <div class="mc-star">天相</div>
+      <div class="mc-desc">給人穩定、成熟、有分寸感的第一印象。內心再躁動，外面先把場面穩住</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">疾厄宮・身體</div>
+      <div class="mc-star">天梁</div>
+      <div class="mc-desc">身體很能撐，但撐到極限才會一次崩。學會在崩潰前讓自己休息</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">財帛宮・金錢</div>
+      <div class="mc-star">廉貞×七殺</div>
+      <div class="mc-desc">靠自己的能力和意志力賺錢。財來財去節奏明顯，方向對了才聚得住</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">子女宮・傳承</div>
+      <div class="mc-star">空宮</div>
+      <div class="mc-desc">對下一代這件事比較自由，不執著。或以創作作為傳承的方式</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">夫妻宮・親密關係 ★身宮</div>
+      <div class="mc-star">空宮・借紫微×貪狼</div>
+      <div class="mc-desc">關係是這輩子的課題。需要在關係裡被尊重、被看見，又能安頓</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-palace">兄弟宮・手足平輩</div>
+      <div class="mc-star">天同</div>
+      <div class="mc-desc">與手足或平輩相處輕鬆愉快，不帶壓力，喜歡平和的相處模式</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 第一章 主線 ══ -->
+<section class="part">
+  <div class="part-header">
+    <div class="part-num">第一章 · 主線</div>
+    <h2 class="part-title">你是誰，你如何運作</h2>
+  </div>
+
+  <!-- 你是誰 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">命宮</span>
+      <span class="section-stars">武曲×破軍</span>
+      <span class="section-concept">你是誰</span>
+    </div>
+
+    <div data-lit="命"></div>
+    <div class="illus illus-md">[ 武曲×破軍 插畫 ]</div>
+
+    <p class="body-text">武曲是一顆重視能力、效率與結果的星。你會自然想把事情做好，比起空談，你更相信真正能執行的東西。責任感對你來說幾乎是本能，只要事情落在你手上，你就會想辦法讓它繼續推進。</p>
+    <p class="body-text">這股能量的底層，通常帶著：<strong>「我要有能力掌握人生。」</strong></p>
+
+    <p class="body-text">破軍是一顆難以忍受停滯的星。當生命開始變得無聊、僵化、失去流動感，內在就會開始躁動。你會自然想改變、更新、推翻舊的狀態，測試新的可能性。</p>
+    <p class="body-text">這股能量的底層，通常帶著：<strong>「人生一旦失去生命感，就會開始想重啟。」</strong></p>
+
+    <div class="callout">
+      <p>兩顆星放在一起，形成一種強烈的內在張力。你一邊想把人生牢牢建立起來，一邊又忍不住對現狀感到不耐。建好了又想改版、穩了卻開始覺得悶、同時想維持秩序又想打破它。</p>
+    </div>
+
+    <div class="quote">你的人生很少真正停在「完成」的感覺裡。</div>
+  </div>
+
+  <!-- 文昌化科 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">命宮・輔星</span>
+      <span class="section-stars">文昌化科</span>
+      <span class="section-concept">命宮加成</span>
+    </div>
+
+    <div data-lit="命"></div>
+    <div class="illus illus-sm">[ 文昌 插畫 ]</div>
+
+    <p class="body-text">武破之外，命宮還有文昌化科同坐。文昌是一顆與文藝、美感、細膩表達有關的星，入廟代表這股能量在你身上很足。化科讓才華不只藏在心裡，而是容易被外界看見、認可、留下名聲。</p>
+    <div class="callout">
+      <p><strong>創作與美感是你核心人格的一部分，不是副業，不是興趣，是你天生的運作語言。</strong> 武破給你推進力，文昌科給你精緻度——讓你不只是「衝」的人，而是有辨識度地建立的人。</p>
+    </div>
+  </div>
+
+  <!-- 生存系統 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">命三方</span>
+      <span class="section-stars">殺破狼×紫武廉・火馬牌</span>
+      <span class="section-concept">生存系統</span>
+    </div>
+
+    <div data-lit="命,官,財"></div>
+    <div class="illus illus-sm">[ 火馬牌 插畫 ]</div>
+
+    <p class="body-text">命三方包含命宮、官祿宮、財帛宮——你的生存作業系統：你用什麼方式推進人生、怎麼取得資源、遇到困境時本能上會怎麼應對。不管你現在是創業、上班、還是在過渡期，這套系統一直在運作。</p>
+
+    <div class="ratio-wrap">
+      <div class="ratio-bar">
+        <div class="ratio-a" style="width:67%"></div>
+        <div class="ratio-b" style="width:33%"></div>
+      </div>
+      <div class="ratio-labels">
+        <span><span class="ratio-dot" style="background:var(--ink)"></span>殺破狼・開拓推進 67%</span>
+        <span><span class="ratio-dot" style="background:#999"></span>紫武廉・秩序領導 33%</span>
+      </div>
+    </div>
+
+    <p class="body-text" style="margin-top:24px;">殺破狼的能量讓你的生存系統有很強的推進性——不安於現狀、主動出擊、在突破與變動中找到資源和機會。紫武廉的能量讓你同時有秩序感和執行力——重視能力、重視自己在局面中的位置、不輕易認輸。</p>
+
+    <div class="callout">
+      <p>你的生存方式很像：<strong>邊建邊衝。</strong> 一邊建立結構，一邊又推著自己繼續往下一個版本走。<br><br>資源策略是<strong>火馬牌</strong>——命宮在巳，四馬地之一。機會在移動中出現，停下來反而容易卡住。</p>
+    </div>
+  </div>
+
+  <!-- 面具與靈魂 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">遷移・福德</span>
+      <span class="section-stars">天相・天府</span>
+      <span class="section-concept">面具與靈魂</span>
+    </div>
+
+    <div data-lit="遷,福"></div>
+
+    <div class="mini-cards">
+      <div class="mini-card">
+        <div class="mc-palace">遷移宮・社會面具</div>
+        <div class="mc-star">天相</div>
+        <div class="mc-desc">分寸感・冷靜<br>先把局面穩住</div>
+      </div>
+      <div class="mini-card">
+        <div class="mc-palace">福德宮・靈魂棲息地</div>
+        <div class="mc-star">天府</div>
+        <div class="mc-desc">豐盛・夠了就好<br>穩穩地活著</div>
+      </div>
+    </div>
+
+    <p class="body-text">天相是你對外的姿態，天府是你對內的燃料。你給人穩定感，是因為你內心深處真的需要穩定。兩者方向一致，但層次不同——一個是你展示給世界的樣子，一個是讓你真正安頓下來的東西。</p>
+    <div class="quote">「你呈現給世界的，正是你最渴望擁有的。」</div>
+  </div>
+
+  <!-- 腳本 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">三方腳本</span>
+      <span class="section-stars">三方衝突：突破・維持・安定</span>
+    </div>
+
+    <div data-lit="命,遷,福"></div>
+
+    <p class="body-text">你的命盤裡，有一股力量不斷說「去衝」，同時有另一股力量說「要穩」。這兩件事同時存在，讓你的人生出現了一個反覆的腳本。</p>
+
+    <p class="body-text"><strong>場景一｜建了又想走，走了又想穩</strong></p>
+    <p class="body-text">武破催你動，天府要你穩。你的人生很容易進入這樣的循環：</p>
+
+    <div class="loop">
+      <div class="loop-node">感受到停滯</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">想突破</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">快速推進</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">耗能・混亂</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">渴望穩定</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">暫時安頓</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">又感受到停滯</div>
+    </div>
+
+    <p class="body-text"><strong>場景二｜外面沒事，裡面已經想走了</strong></p>
+    <p class="body-text">命宮的武破內在躁動，遷移的天相外在穩住場面。外表完全沒事，甚至還在照顧別人，但心裡其實已經在想下一步。你消化了很多，只是沒讓人看見。</p>
+
+    <div class="callout">
+      <p>三方的拉力最終指向同一件事：你需要學會分辨，什麼時候的「穩」是在積蓄，什麼時候的「動」是在逃。<br><br>當你能帶著天府的底氣去移動，這個腳本就從消耗變成了你的節奏。</p>
+    </div>
+
+    <div class="quote">突破、維持與安定，是你這輩子一直在練習的平衡。</div>
+  </div>
+</section>
+
+<!-- ══ 關係線 ══ -->
+<div class="line-header">
+  <span class="line-num">第二章・支線 01</span>
+  <span class="line-title">關係線</span>
+</div>
+
+<section class="part">
+
+  <!-- 愛情 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">夫妻宮</span>
+      <span class="section-stars">空宮・借紫微×貪狼</span>
+      <span class="section-concept">愛情</span>
+    </div>
+
+    <div data-lit="夫"></div>
+
+    <p class="body-text">身宮落在夫妻宮，空宮借紫微與貪狼。這不是說你的人生只有愛情，而是說——<strong>關係這件事，會一直出現在你的人生裡當課題。</strong></p>
+    <p class="body-text">借來的紫微讓你在關係裡需要被尊重，需要有一定的主導感。貪狼讓你在關係裡欲望豐富，渴望真實的情感與有深度的連結。</p>
+    <div class="callout">
+      <p><strong>你需要在關係裡找到安全感，同時被看見和被尊重。</strong> 當一段關係能同時給你這兩件事，才是你能真正安頓的地方。</p>
+    </div>
+  </div>
+
+  <!-- 人際 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">交友宮</span>
+      <span class="section-stars">巨門</span>
+      <span class="section-concept">人際</span>
+    </div>
+
+    <div data-lit="友"></div>
+
+    <p class="body-text">巨門是一顆與語言、辨別、深度溝通有關的星。在交友宮，你的人際有幾個特質：你能看穿人，朋友不多但真；你喜歡有深度的對話，耐不住只是閒聊的關係。</p>
+    <p class="body-text">有時候你的直接會引起口舌，但這也是你自然篩掉不真誠的人的方式。你的社群不大，但每個都是你真的在乎的。</p>
+  </div>
+
+  <!-- 家庭 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">父母・兄弟・子女</span>
+      <span class="section-stars">太陽・天同・空宮</span>
+      <span class="section-concept">家庭</span>
+    </div>
+
+    <div data-lit="父,兄,子"></div>
+
+    <div class="mini-cards">
+      <div class="mini-card">
+        <div class="mc-palace">父母宮</div>
+        <div class="mc-star">太陽</div>
+        <div class="mc-desc">與長輩緣分較深，得長輩支持，父親形象在你人生影響較大</div>
+      </div>
+      <div class="mini-card">
+        <div class="mc-palace">兄弟宮</div>
+        <div class="mc-star">天同</div>
+        <div class="mc-desc">與手足或平輩相處輕鬆愉快，不帶壓力，喜歡和平的關係</div>
+      </div>
+      <div class="mini-card">
+        <div class="mc-palace">子女宮</div>
+        <div class="mc-star">空宮</div>
+        <div class="mc-desc">對下一代這件事比較自由，不執著，或以創作作為傳承</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 物質線 ══ -->
+<div class="line-header">
+  <span class="line-num">第二章・支線 02</span>
+  <span class="line-title">物質線</span>
+</div>
+
+<section class="part">
+
+  <!-- 事業 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">官祿宮</span>
+      <span class="section-stars">紫微×貪狼</span>
+      <span class="section-concept">事業</span>
+    </div>
+
+    <div data-lit="官"></div>
+
+    <p class="body-text">官祿宮坐紫微貪狼，你在事業上有天然的影響力和號召力。紫微帶來領袖氣質和整合能力，貪狼帶來魅力和多元才能。</p>
+    <p class="body-text">你適合有創意、需要人際連結、或能主導方向的工作。但命三方的殺破狼也告訴你，你的事業路不會是直線——是一邊衝一邊找定位，每一次轉向都是在更新版本。</p>
+    <div class="callout">
+      <p>官祿的紫微貪狼和命宮的武破，加在一起是：<strong>你有能力建立有影響力的事業，但你需要讓自己持續在移動和創新中，才能維持動力。</strong></p>
+    </div>
+  </div>
+
+  <!-- 錢財 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">財帛・田宅</span>
+      <span class="section-stars">廉貞×七殺・太陰</span>
+      <span class="section-concept">錢財</span>
+    </div>
+
+    <div data-lit="財,田"></div>
+
+    <div class="mini-cards">
+      <div class="mini-card">
+        <div class="mc-palace">財帛宮</div>
+        <div class="mc-star">廉貞×七殺</div>
+        <div class="mc-desc">靠自己的能力和意志力賺錢，不依賴他人。財來財去的節奏，關鍵是找到真正有熱情的方向</div>
+      </div>
+      <div class="mini-card">
+        <div class="mc-palace">田宅宮</div>
+        <div class="mc-star">太陰</div>
+        <div class="mc-desc">家是你補充能量的地方，需要有質感、柔軟的私人空間。資產累積方式偏向安靜積累</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 身心線 ══ -->
+<div class="line-header">
+  <span class="line-num">第二章・支線 03</span>
+  <span class="line-title">身心線</span>
+</div>
+
+<section class="part" style="border-bottom:none;">
+
+  <!-- 身體 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">疾厄宮</span>
+      <span class="section-stars">天梁</span>
+      <span class="section-concept">身體</span>
+    </div>
+
+    <div data-lit="疾"></div>
+
+    <p class="body-text">天梁是一顆有保護力、很能撐的星。你的身體通常能扛過很多，別人可能早就倒了你還在。</p>
+    <p class="body-text">但撐到臨界點時，會一次崩潰。壓力越大，你反而越容易進入冷靜處理模式——這讓周圍的人很難察覺你的真實狀態，你消化了很多，只是沒有讓人看見。</p>
+    <div class="callout">
+      <p>天梁在疾厄的功課：<strong>學會在崩潰之前，就讓自己休息。</strong> 你的身體不是不會說話，只是你太習慣撐著了。</p>
+    </div>
+  </div>
+
+  <!-- 精神 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-palace">福德宮</span>
+      <span class="section-stars">天府</span>
+      <span class="section-concept">精神燃料</span>
+    </div>
+
+    <div data-lit="福"></div>
+
+    <p class="body-text">靈魂深處，你渴望豐盛與安定。天府是庫星，你的精神世界需要「夠了」的感覺才能真正放鬆——夠安全、夠充足、生活有秩序、有餘裕可以慢慢呼吸。</p>
+    <div class="quote">「穩穩地、豐盛地活著。」</div>
+  </div>
+
+  <!-- 結尾 -->
+  <div class="section" style="border-bottom:none;">
+    <div class="illus illus-md">[ 結尾視覺 ]</div>
+    <div class="quote" style="padding-top:0;">突破、維持與安定，是你這輩子一直在練習的平衡。</div>
+  </div>
+</section>
+
+</body>
+</html>
